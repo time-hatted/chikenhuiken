@@ -1,33 +1,86 @@
-<!--(C) 2020 Moses Odhiambo-->
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+    <title>Chicken Huiken</title>
+    <link rel="stylesheet" href="style.css" />
+    <script src="https://telegram.org/js/telegram-web-app.js"></script>
     <script src="https://badasstechie.github.io/lib/three/112.1/three.min.js"></script>
     <script src="https://badasstechie.github.io/lib/three/112.1/BufferGeometryUtils.min.js"></script>
-    <script src="https://badasstechie.github.io/lib/stats/stats.min.js"></script>
 </head>
-<body onload = "firstRun()">
-    <div id="score"></div>
-    <div id = "splash">
-        <div id = "title">
-            WHY DID THE CHICKEN<br/>CROSS<br/>THE ROAD?
+<body>
+    <!-- Coin overlay (fixed top-right) -->
+    <div id="coin-overlay">
+        <span class="coin-icon">🪙</span>
+        <span id="coin-count">0</span>
+    </div>
+
+    <!-- Main content area -->
+    <div id="app-container">
+        <!-- Game Tab -->
+        <div id="game-tab" class="tab-content active">
+            <div id="game-splash">
+                <div class="game-title">CHICKEN HUIKEN</div>
+                <div class="game-subtitle">Cross the Road!</div>
+                <button id="play-button" class="btn-primary">PLAY</button>
+            </div>
+            <div id="game-canvas-container"></div>
+            <button id="restart-button" class="btn-restart hidden">Play Again</button>
         </div>
-        <div id = "loading">
-            <div class = "main letter">LOADING</div>
-            <div class = "period1 letter">.</div>
-            <div class = "period2 letter">.</div>
-            <div class = "period3 letter">.</div>
+
+        <!-- Tasks Tab -->
+        <div id="tasks-tab" class="tab-content">
+            <div class="tab-header">
+                <h2>Tasks</h2>
+            </div>
+            <div class="task-list">
+                <div class="task-item">
+                    <div class="task-info">
+                        <div class="task-title">Daily Bonus</div>
+                        <div class="task-description">Claim +50 coins every 24 hours</div>
+                        <div id="bonus-timer" class="task-timer"></div>
+                    </div>
+                    <button id="claim-button" class="btn-claim">Claim</button>
+                </div>
+            </div>
         </div>
-        <div id = "instructions">Use the arrow keys to move<br> around</div>
-        <div id = "play">
-            PLAY
-            <button id = "pressPlay" disabled onclick = "init()"></button>
+
+        <!-- Profile Tab -->
+        <div id="profile-tab" class="tab-content">
+            <div class="tab-header">
+                <h2>Profile</h2>
+            </div>
+            <div class="profile-content">
+                <div class="profile-item">
+                    <div class="profile-label">Total Coins</div>
+                    <div id="profile-coins" class="profile-value">0 🪙</div>
+                </div>
+                <div class="profile-item">
+                    <div class="profile-label">Telegram ID</div>
+                    <div id="profile-id" class="profile-value">-</div>
+                </div>
+                <button id="share-button" class="btn-primary">Share my profile</button>
+            </div>
         </div>
     </div>
-    <button id="restart" onclick = "init()">Play Again</button>
-    <script src="index.js"></script>
+
+    <!-- Bottom Navigation -->
+    <nav id="bottom-nav">
+        <button class="nav-item active" data-tab="game">
+            <span class="nav-icon">🎮</span>
+            <span class="nav-label">Game</span>
+        </button>
+        <button class="nav-item" data-tab="tasks">
+            <span class="nav-icon">📋</span>
+            <span class="nav-label">Tasks</span>
+        </button>
+        <button class="nav-item" data-tab="profile">
+            <span class="nav-icon">👤</span>
+            <span class="nav-label">Profile</span>
+        </button>
+    </nav>
+
+    <script src="script.js"></script>
 </body>
 </html>
