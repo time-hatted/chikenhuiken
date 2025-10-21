@@ -94,3 +94,22 @@ Never trust data sent directly from the client. Always validate via initData.
 - Set secure headers (e.g., helmet.js)
 - Monitor for suspicious activity
 - Implement request logging
+
+## Troubleshooting
+
+### "The string did not match the expected pattern" Error
+
+This error can occur when the Telegram WebApp `initData` is malformed or contains invalid characters. The server now includes enhanced validation to handle edge cases:
+
+- **Empty or whitespace-only initData**: Returns clear error message
+- **Invalid data types**: Validates that initData is a string
+- **Malformed URL encoding**: Catches URLSearchParams parsing errors
+- **Invalid JSON in user data**: Catches JSON parsing errors
+
+If you encounter this error:
+1. Ensure the `initData` is being sent correctly from the Telegram WebApp
+2. Check that the data is not being double-encoded or modified in transit
+3. Verify that special characters in the data are properly URL-encoded
+4. Check the server logs for more specific error messages
+
+The validation function now provides detailed error messages to help diagnose issues.
