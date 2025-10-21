@@ -1,147 +1,327 @@
-/*(C) 2020 Moses Odhiambo*/
-
-@font-face{
-    font-family: Extrude;
-    src: url('https://badasstechie.github.io/CrossyRoad/fonts/Extrude.ttf');
-}
-@font-face{
-    font-family: Boxy;
-    src: url('https://badasstechie.github.io/CrossyRoad/fonts/PressStart2P.ttf');
-}
-*{
+/* Reset and Base Styles */
+* {
+    margin: 0;
     padding: 0;
-    margin: 0;
-    user-select:none;
+    box-sizing: border-box;
+    user-select: none;
+    -webkit-tap-highlight-color: transparent;
 }
-*:focus {
-    outline: none;
+
+:root {
+    --tg-theme-bg-color: #ffffff;
+    --tg-theme-text-color: #000000;
+    --tg-theme-hint-color: #999999;
+    --tg-theme-link-color: #2481cc;
+    --tg-theme-button-color: #2481cc;
+    --tg-theme-button-text-color: #ffffff;
+    --nav-height: 70px;
+    --safe-area-inset-bottom: env(safe-area-inset-bottom, 0px);
 }
-body{
-    margin: 0;
+
+body {
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+    background-color: var(--tg-theme-bg-color);
+    color: var(--tg-theme-text-color);
     overflow: hidden;
+    width: 100vw;
+    height: 100vh;
+    position: fixed;
 }
-canvas{
-    height: 100%;
-    width: 100%;
-    display: block;
-}
-#score {
-    font-family: Boxy;
-    font-size: 15px;
-    color: white;
-    position: absolute;
+
+/* Coin Overlay */
+#coin-overlay {
+    position: fixed;
     top: 10px;
     right: 10px;
-}
-#splash{
-    height: 100vh;
-    width: 100vw;
-    background-image: url('https://badasstechie.github.io/CrossyRoad/images/splash-screen.jpg');
-    background-size: auto 100%;
-    background-position: center center;
-}
-#title{
-    position: absolute;
-    height: 18vh;
-    width: 100vw;
-    top: 5vh;
-    font-family: Extrude;
-    font-size: 35px;
+    background: rgba(0, 0, 0, 0.7);
     color: white;
-    text-align: center;
-    vertical-align: middle;
-    line-height: 6vh;
+    padding: 8px 16px;
+    border-radius: 20px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 18px;
+    font-weight: bold;
+    z-index: 1000;
+    backdrop-filter: blur(10px);
 }
-#loading{
-    opacity: 1;
-    position: relative;
-    top: 85vh;
-    width: 240px;
-    height: 8%;
-    margin: 0 auto;
-    font-size: 24px;
-    background-color: white;
+
+.coin-icon {
+    font-size: 20px;
 }
-.letter{
-    font-family: Boxy;
-    height: 80%;
-    float: left;
-    color: #11bfe2;
-}
-.main{
-    height: 80%;
-    margin: 5px 0px;
-}
-.period1{
-    animation: first 3s step-end infinite;
-}
-.period2{
-    animation: second 3s step-end infinite;
-}
-.period3{
-    animation: third 3s step-end infinite;
-}
-#instructions{
-    position: absolute;
-    top: 75vh;
+
+/* App Container */
+#app-container {
     width: 100%;
-    height: 5%;
-    margin: 0 auto;
-    font-family: 'Roboto';
-    font-size: 16px;
-    text-align: center;
-    color: white;
-}
-#play{
-    font-family: Boxy;
-    opacity: 0;
+    height: calc(100vh - var(--nav-height) - var(--safe-area-inset-bottom));
+    overflow: hidden;
     position: relative;
-    top: 80vh;
-    width: 200px;
-    height: 8%;
-    margin: 0 auto;
-    font-family: Boxy;
-    font-size: 24px;
-    text-align: center;
-    color: #11bfe2;
-    background-color: white;
 }
-#pressPlay{
-    opacity: 0;
+
+/* Tab Content */
+.tab-content {
+    display: none;
+    width: 100%;
+    height: 100%;
+    overflow-y: auto;
+    -webkit-overflow-scrolling: touch;
+}
+
+.tab-content.active {
+    display: block;
+}
+
+.tab-header {
+    padding: 20px;
+    background: var(--tg-theme-button-color);
+    color: var(--tg-theme-button-text-color);
+}
+
+.tab-header h2 {
+    font-size: 24px;
+    font-weight: 600;
+}
+
+/* Game Tab */
+#game-tab {
+    position: relative;
+    background: linear-gradient(to bottom, #69ceec 0%, #afe6f7 100%);
+}
+
+#game-splash {
     position: absolute;
-    top: 0px;
-    left: 0px;
-    width: 200px;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    text-align: center;
+    z-index: 100;
+    background: rgba(255, 255, 255, 0.95);
+    padding: 40px;
+    border-radius: 20px;
+    box-shadow: 0 10px 40px rgba(0, 0, 0, 0.2);
+}
+
+.game-title {
+    font-size: 32px;
+    font-weight: bold;
+    color: #2481cc;
+    margin-bottom: 10px;
+}
+
+.game-subtitle {
+    font-size: 18px;
+    color: #666;
+    margin-bottom: 30px;
+}
+
+#game-canvas-container {
+    width: 100%;
     height: 100%;
 }
-#restart {
-    position: absolute;
-    top: 50vh;
-    left: 50vw;
-    background-color: red;
-    color: white;
-    padding: 15px 30px 15px 30px;
-    font-family: Boxy;
+
+#game-canvas-container canvas {
+    display: block;
+    width: 100%;
+    height: 100%;
+}
+
+/* Buttons */
+.btn-primary {
+    background: var(--tg-theme-button-color);
+    color: var(--tg-theme-button-text-color);
+    border: none;
+    padding: 15px 40px;
+    border-radius: 12px;
     font-size: 18px;
-    border-style: none;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.btn-primary:active {
+    transform: scale(0.95);
+    opacity: 0.8;
+}
+
+.btn-restart {
+    position: absolute;
+    top: 50%;
+    left: 50%;
     transform: translate(-50%, -50%);
-    visibility: hidden;
+    background: #ff4444;
+    color: white;
+    border: none;
+    padding: 20px 50px;
+    border-radius: 12px;
+    font-size: 20px;
+    font-weight: 600;
+    cursor: pointer;
+    z-index: 200;
+    box-shadow: 0 5px 20px rgba(0, 0, 0, 0.3);
 }
-@keyframes first{
-    0% { opacity: 0; }
-    25% { opacity: 1; }
-    50% { opacity: 1; }
-    75% { opacity: 1; }
+
+.btn-restart:active {
+    transform: translate(-50%, -50%) scale(0.95);
 }
-@keyframes second{
-    0% { opacity: 0; }
-    25% { opacity: 0; }
-    50% { opacity: 1; }
-    75% { opacity: 1; }
+
+.hidden {
+    display: none !important;
 }
-@keyframes third{
-    0% { opacity: 0; }
-    25% { opacity: 0; }
-    50% { opacity: 0; }
-    75% { opacity: 1; }
+
+/* Tasks Tab */
+#tasks-tab {
+    background: var(--tg-theme-bg-color);
+}
+
+.task-list {
+    padding: 20px;
+}
+
+.task-item {
+    background: rgba(0, 0, 0, 0.05);
+    border-radius: 12px;
+    padding: 20px;
+    margin-bottom: 15px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.task-info {
+    flex: 1;
+}
+
+.task-title {
+    font-size: 18px;
+    font-weight: 600;
+    margin-bottom: 5px;
+}
+
+.task-description {
+    font-size: 14px;
+    color: var(--tg-theme-hint-color);
+    margin-bottom: 5px;
+}
+
+.task-timer {
+    font-size: 12px;
+    color: var(--tg-theme-hint-color);
+    margin-top: 5px;
+}
+
+.btn-claim {
+    background: #4caf50;
+    color: white;
+    border: none;
+    padding: 12px 24px;
+    border-radius: 8px;
+    font-size: 16px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.btn-claim:active:not(:disabled) {
+    transform: scale(0.95);
+}
+
+.btn-claim:disabled {
+    background: #ccc;
+    cursor: not-allowed;
+}
+
+.btn-claim.claimed {
+    background: #999;
+}
+
+/* Profile Tab */
+#profile-tab {
+    background: var(--tg-theme-bg-color);
+}
+
+.profile-content {
+    padding: 20px;
+}
+
+.profile-item {
+    background: rgba(0, 0, 0, 0.05);
+    border-radius: 12px;
+    padding: 20px;
+    margin-bottom: 15px;
+}
+
+.profile-label {
+    font-size: 14px;
+    color: var(--tg-theme-hint-color);
+    margin-bottom: 8px;
+}
+
+.profile-value {
+    font-size: 24px;
+    font-weight: 600;
+}
+
+#share-button {
+    width: 100%;
+    margin-top: 20px;
+}
+
+/* Bottom Navigation */
+#bottom-nav {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    height: calc(var(--nav-height) + var(--safe-area-inset-bottom));
+    background: var(--tg-theme-bg-color);
+    border-top: 1px solid rgba(0, 0, 0, 0.1);
+    display: flex;
+    justify-content: space-around;
+    align-items: flex-start;
+    padding-top: 8px;
+    padding-bottom: var(--safe-area-inset-bottom);
+    z-index: 1000;
+}
+
+.nav-item {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    background: none;
+    border: none;
+    color: var(--tg-theme-hint-color);
+    cursor: pointer;
+    padding: 8px;
+    transition: color 0.3s ease;
+}
+
+.nav-item.active {
+    color: var(--tg-theme-button-color);
+}
+
+.nav-icon {
+    font-size: 24px;
+    margin-bottom: 4px;
+}
+
+.nav-label {
+    font-size: 12px;
+    font-weight: 500;
+}
+
+/* Responsive adjustments */
+@media (max-width: 375px) {
+    .game-title {
+        font-size: 28px;
+    }
+    
+    .nav-icon {
+        font-size: 22px;
+    }
+    
+    .nav-label {
+        font-size: 11px;
+    }
 }
