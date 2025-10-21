@@ -9,9 +9,33 @@ function validateTelegramWebAppData(initData, botToken) {
     return { valid: false, error: 'Missing initData or botToken' };
   }
 
+  // Validate that initData is a string
+  if (typeof initData !== 'string') {
+    return { valid: false, error: 'initData must be a string' };
+  }
+
+  // Trim whitespace that might cause parsing issues
+  initData = initData.trim();
+
+  // Check for empty string after trim
+  if (initData.length === 0) {
+    return { valid: false, error: 'initData is empty' };
+  }
+
   try {
     // Parse the initData string
-    const urlParams = new URLSearchParams(initData);
+    // Use a try-catch specifically for URLSearchParams as it can throw
+    // "The string did not match the expected pattern" in some environments
+    let urlParams;
+    try {
+      urlParams = new URLSearchParams(initData);
+    } catch (parseError) {
+      return { 
+        valid: false, 
+        error: `Failed to parse initData: ${parseError.message}. The initData string may be malformed or contain invalid characters.` 
+      };
+    }
+
     const hash = urlParams.get('hash');
     
     if (!hash) {
@@ -65,7 +89,21 @@ function validateTelegramWebAppData(initData, botToken) {
       return { valid: false, error: 'user data not found' };
     }
 
-    const user = JSON.parse(userJson);
+    // Parse JSON with explicit error handling
+    let user;
+    try {
+      user = JSON.parse(userJson);
+    } catch (jsonError) {
+      return { 
+        valid: false, 
+        error: `Failed to parse user data: ${jsonError.message}. The user JSON may be malformed.` 
+      };
+    }
+
+    // Validate that user object has required fields
+    if (!user || typeof user.id === 'undefined') {
+      return { valid: false, error: 'User data is missing required fields (id)' };
+    }
     
     return {
       valid: true,
