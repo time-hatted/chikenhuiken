@@ -185,6 +185,7 @@ app.get('/api/me', requireTelegramAuth, (req, res) => {
 });
 
 // Serve index.html for root path
+// TODO: Add rate limiting for production (e.g., express-rate-limit)
 app.get('/', (req, res) => {
   res.sendFile(path.join(__dirname, '..', 'index.html'));
 });

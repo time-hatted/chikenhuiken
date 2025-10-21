@@ -87,3 +87,10 @@ The server validates all incoming requests using Telegram's WebApp authenticatio
 3. Extracts and verifies user information
 
 Never trust data sent directly from the client. Always validate via initData.
+
+### Production Security Recommendations
+- Add rate limiting (e.g., express-rate-limit) to prevent abuse
+- Use HTTPS in production
+- Set secure headers (e.g., helmet.js)
+- Monitor for suspicious activity
+- Implement request logging
