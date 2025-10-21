@@ -1,0 +1,17 @@
+# Server files
+server/node_modules/
+server/.env
+server/data.sqlite
+server/data.sqlite-journal
+server/*.log
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# Editor files
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
